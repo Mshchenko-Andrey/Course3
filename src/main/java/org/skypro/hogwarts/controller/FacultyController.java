@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.skypro.hogwarts.model.Faculty;
 import org.skypro.hogwarts.service.FacultyService;
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/faculty")
@@ -42,21 +42,18 @@ public class FacultyController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
-        Faculty deletedFaculty = facultyService.deleteFaculty(id);
-        if (deletedFaculty == null) {
-            return ResponseEntity.notFound().build();
-        }
+        facultyService.deleteFaculty(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/by-color")
-    public ResponseEntity<Collection<Faculty>> getFacultiesByColor(@RequestParam String color) {
-        Collection<Faculty> faculties = facultyService.getFacultiesByColor(color);
+    public ResponseEntity<List<Faculty>> getFacultiesByColor(@RequestParam String color) {
+        List<Faculty> faculties = facultyService.getFacultiesByColor(color);
         return ResponseEntity.ok(faculties);
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Faculty>> getAllFaculties() {
+    public ResponseEntity<List<Faculty>> getAllFaculties() {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 }
