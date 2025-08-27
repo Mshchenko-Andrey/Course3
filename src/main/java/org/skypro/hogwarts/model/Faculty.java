@@ -1,6 +1,8 @@
 package org.skypro.hogwarts.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,6 +18,9 @@ public class Faculty {
     @Column(nullable = false)
     private String color;
 
+    @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Student> students = new ArrayList<>();
+
     public Faculty() {
     }
 
@@ -24,6 +29,7 @@ public class Faculty {
         this.color = color;
     }
 
+    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -48,6 +54,14 @@ public class Faculty {
         this.color = color;
     }
 
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,6 +81,7 @@ public class Faculty {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", color='" + color + '\'' +
+                ", studentsCount=" + students.size() +
                 '}';
     }
 }

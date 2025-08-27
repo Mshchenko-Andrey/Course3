@@ -16,6 +16,10 @@ public class Student {
     @Column(nullable = false)
     private int age;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "faculty_id")
+    private Faculty faculty;
+
     public Student() {
     }
 
@@ -24,6 +28,7 @@ public class Student {
         this.age = age;
     }
 
+    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
@@ -48,6 +53,14 @@ public class Student {
         this.age = age;
     }
 
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,6 +80,7 @@ public class Student {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
+                ", faculty=" + (faculty != null ? faculty.getName() : "null") +
                 '}';
     }
 }
