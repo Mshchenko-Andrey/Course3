@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.skypro.hogwarts.model.Student;
 import org.skypro.hogwarts.service.StudentService;
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -42,21 +42,18 @@ public class StudentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        Student deletedStudent = studentService.deleteStudent(id);
-        if (deletedStudent == null) {
-            return ResponseEntity.notFound().build();
-        }
+        studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/by-age")
-    public ResponseEntity<Collection<Student>> getStudentsByAge(@RequestParam int age) {
-        Collection<Student> students = studentService.getStudentsByAge(age);
+    public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam int age) {
+        List<Student> students = studentService.getStudentsByAge(age);
         return ResponseEntity.ok(students);
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Student>> getAllStudents() {
+    public ResponseEntity<List<Student>> getAllStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 }

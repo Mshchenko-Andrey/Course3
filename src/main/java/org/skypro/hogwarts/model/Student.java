@@ -1,14 +1,25 @@
 package org.skypro.hogwarts.model;
 
+import jakarta.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "students")
 public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private int age;
 
-    public Student(Long id, String name, int age) {
-        this.id = id;
+    public Student() {
+    }
+
+    public Student(String name, int age) {
         this.name = name;
         this.age = age;
     }
