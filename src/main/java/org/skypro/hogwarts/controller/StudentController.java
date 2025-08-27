@@ -3,6 +3,7 @@ package org.skypro.hogwarts.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.skypro.hogwarts.model.Faculty;
 import org.skypro.hogwarts.model.Student;
 import org.skypro.hogwarts.service.StudentService;
 import java.util.List;
@@ -50,6 +51,35 @@ public class StudentController {
     public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam int age) {
         List<Student> students = studentService.getStudentsByAge(age);
         return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/by-age-between")
+    public ResponseEntity<List<Student>> getStudentsByAgeBetween(
+            @RequestParam int min,
+            @RequestParam int max) {
+        List<Student> students = studentService.getStudentsByAgeBetween(min, max);
+        return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/by-name")
+    public ResponseEntity<List<Student>> getStudentsByNameContaining(@RequestParam String name) {
+        List<Student> students = studentService.getStudentsByNameContaining(name);
+        return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/ordered-by-age")
+    public ResponseEntity<List<Student>> getStudentsOrderedByAge() {
+        List<Student> students = studentService.getStudentsOrderedByAge();
+        return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/{id}/faculty")
+    public ResponseEntity<Faculty> getStudentFaculty(@PathVariable Long id) {
+        Faculty faculty = studentService.getStudentFaculty(id);
+        if (faculty == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(faculty);
     }
 
     @GetMapping
