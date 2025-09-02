@@ -1,11 +1,11 @@
 package org.skypro.hogwarts.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.skypro.hogwarts.model.Faculty;
 import org.skypro.hogwarts.model.Student;
 import org.skypro.hogwarts.service.StudentService;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
@@ -18,72 +18,73 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        Student createdStudent = studentService.createStudent(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Student createStudent(@RequestBody Student student) {
+        return studentService.createStudent(student);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudent(@PathVariable Long id) {
+    public Student getStudent(@PathVariable Long id) {
         Student student = studentService.getStudentById(id);
         if (student == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found");
         }
-        return ResponseEntity.ok(student);
+        return student;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
+    public Student updateStudent(@PathVariable Long id, @RequestBody Student student) {
         Student updatedStudent = studentService.updateStudent(id, student);
         if (updatedStudent == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found");
         }
-        return ResponseEntity.ok(updatedStudent);
+        return updatedStudent;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/by-age")
-    public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam int age) {
-        List<Student> students = studentService.getStudentsByAge(age);
-        return ResponseEntity.ok(students);
+    public List<Student> getStudentsByAge(@RequestParam int age) {
+        return studentService.getStudentsByAge(age);
     }
 
     @GetMapping("/by-age-between")
-    public ResponseEntity<List<Student>> getStudentsByAgeBetween(
+    public List<Student> getStudentsByAgeBetween(
             @RequestParam int min,
             @RequestParam int max) {
-        List<Student> students = studentService.getStudentsByAgeBetween(min, max);
-        return ResponseEntity.ok(students);
+        return studentService.getStudentsByAgeBetween(min, max);
     }
 
     @GetMapping("/by-name")
-    public ResponseEntity<List<Student>> getStudentsByNameContaining(@RequestParam String name) {
-        List<Student> students = studentService.getStudentsByNameContaining(name);
-        return ResponseEntity.ok(students);
+    public List<Student> getStudentsByNameContaining(@RequestParam String name) {
+        return studentService.getStudentsByNameContaining(name);
+    }
+
+    @GetMapping("/by-age-less-than")
+    public List<Student> getStudentsWithAgeLessThan(@RequestParam int age) {
+        return studentService.getStudentsWithAgeLessThan(age);
     }
 
     @GetMapping("/ordered-by-age")
-    public ResponseEntity<List<Student>> getStudentsOrderedByAge() {
-        List<Student> students = studentService.getStudentsOrderedByAge();
-        return ResponseEntity.ok(students);
+    public List<Student> getStudentsOrderedByAge() {
+        return studentService.getStudentsOrderedByAge();
     }
 
     @GetMapping("/{id}/faculty")
-    public ResponseEntity<Faculty> getStudentFaculty(@PathVariable Long id) {
+    public Faculty getStudentFaculty(@PathVariable Long id) {
         Faculty faculty = studentService.getStudentFaculty(id);
         if (faculty == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found for student");
         }
-        return ResponseEntity.ok(faculty);
+        return faculty;
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents() {
-        return ResponseEntity.ok(studentService.getAllStudents());
+    public List<Student> getAllStudents() {
+        return studentService.getAllStudents();
     }
 }
