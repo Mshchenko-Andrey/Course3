@@ -10,6 +10,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findByAge(int age);
     List<Student> findByAgeBetween(int minAge, int maxAge);
     List<Student> findByNameContainingIgnoreCase(String namePart);
-    List<Student> findByAgeLessThan(Long id);
+    List<Student> findByAgeLessThan(int age); // Исправлено: int age вместо Long id
     List<Student> findAllByOrderByAgeAsc();
 }

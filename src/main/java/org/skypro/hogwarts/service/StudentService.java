@@ -25,6 +25,10 @@ public class StudentService {
         return studentRepository.findById(id).orElse(null);
     }
 
+    public Optional<Student> findStudentById(Long id) { // Новый метод для Optional
+        return studentRepository.findById(id);
+    }
+
     public Student updateStudent(Long id, Student student) {
         Optional<Student> existingStudent = studentRepository.findById(id);
         if (existingStudent.isPresent()) {
@@ -54,14 +58,13 @@ public class StudentService {
         return studentRepository.findByNameContainingIgnoreCase(namePart);
     }
 
-    public List<Student> getStudentsWithAgeLessThanId() {
-        return studentRepository.findByAgeLessThan(0L);
+    public List<Student> getStudentsWithAgeLessThan(int age) { // Исправленный метод
+        return studentRepository.findByAgeLessThan(age);
     }
 
     public List<Student> getStudentsOrderedByAge() {
         return studentRepository.findAllByOrderByAgeAsc();
     }
-
 
     public Faculty getStudentFaculty(Long studentId) {
         Student student = getStudentById(studentId);

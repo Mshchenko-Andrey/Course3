@@ -1,11 +1,11 @@
 package org.skypro.hogwarts.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.skypro.hogwarts.model.Faculty;
 import org.skypro.hogwarts.model.Student;
 import org.skypro.hogwarts.service.FacultyService;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
@@ -18,55 +18,52 @@ public class FacultyController {
     }
 
     @PostMapping
-    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
-        Faculty createdFaculty = facultyService.createFaculty(faculty);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdFaculty);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Faculty createFaculty(@RequestBody Faculty faculty) {
+        return facultyService.createFaculty(faculty);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
+    public Faculty getFaculty(@PathVariable Long id) {
         Faculty faculty = facultyService.getFacultyById(id);
         if (faculty == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found");
         }
-        return ResponseEntity.ok(faculty);
+        return faculty;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Faculty> updateFaculty(@PathVariable Long id, @RequestBody Faculty faculty) {
+    public Faculty updateFaculty(@PathVariable Long id, @RequestBody Faculty faculty) {
         Faculty updatedFaculty = facultyService.updateFaculty(id, faculty);
         if (updatedFaculty == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found");
         }
-        return ResponseEntity.ok(updatedFaculty);
+        return updatedFaculty;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/by-color")
-    public ResponseEntity<List<Faculty>> getFacultiesByColor(@RequestParam String color) {
-        List<Faculty> faculties = facultyService.getFacultiesByColor(color);
-        return ResponseEntity.ok(faculties);
+    public List<Faculty> getFacultiesByColor(@RequestParam String color) {
+        return facultyService.getFacultiesByColor(color);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Faculty>> findFacultiesByNameOrColor(@RequestParam String search) {
-        List<Faculty> faculties = facultyService.findFacultiesByNameOrColor(search);
-        return ResponseEntity.ok(faculties);
+    public List<Faculty> findFacultiesByNameOrColor(@RequestParam String search) {
+        return facultyService.findFacultiesByNameOrColor(search);
     }
 
     @GetMapping("/{id}/students")
-    public ResponseEntity<List<Student>> getFacultyStudents(@PathVariable Long id) {
-        List<Student> students = facultyService.getFacultyStudents(id);
-        return ResponseEntity.ok(students);
+    public List<Student> getFacultyStudents(@PathVariable Long id) {
+        return facultyService.getFacultyStudents(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<Faculty>> getAllFaculties() {
-        return ResponseEntity.ok(facultyService.getAllFaculties());
+    public List<Faculty> getAllFaculties() {
+        return facultyService.getAllFaculties();
     }
 }
