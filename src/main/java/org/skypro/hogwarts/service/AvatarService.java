@@ -5,6 +5,9 @@ import org.skypro.hogwarts.model.Student;
 import org.skypro.hogwarts.repository.AvatarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
@@ -69,6 +72,12 @@ public class AvatarService {
             throw new RuntimeException("Avatar file not found for student id: " + studentId);
         }
         throw new RuntimeException("Avatar not found in database for student id: " + studentId);
+    }
+
+
+    public Page<Avatar> getAllAvatars(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return avatarRepository.findAll(pageable);
     }
 
     private String getFileExtension(String fileName) {
