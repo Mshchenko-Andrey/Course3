@@ -3,6 +3,7 @@ package org.skypro.hogwarts.controller;
 import org.skypro.hogwarts.model.Avatar;
 import org.skypro.hogwarts.service.AvatarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,6 +58,14 @@ public class AvatarController {
         Optional<Avatar> avatarOptional = avatarService.getAvatarByStudentId(studentId);
         return avatarOptional.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @GetMapping
+    public Page<Avatar> getAllAvatars(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return avatarService.getAllAvatars(page, size);
     }
 
 
