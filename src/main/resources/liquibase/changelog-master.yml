@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/changesets/001-create-student-index.yml
+  - include:
+      file: liquibase/changesets/002-create-faculty-index.yml
