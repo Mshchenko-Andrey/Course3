@@ -18,89 +18,89 @@ public class FacultyService {
     @Autowired
     public FacultyService(FacultyRepository facultyRepository) {
         this.facultyRepository = facultyRepository;
-        logger.info("FacultyService initialized");
+        logger.info("Сервис факультетов инициализирован");
     }
 
     public Faculty createFaculty(Faculty faculty) {
-        logger.info("Was invoked method for create faculty");
-        logger.debug("Creating faculty: name={}, color={}", faculty.getName(), faculty.getColor());
+        logger.info("Был вызван метод для создания факультета");
+        logger.debug("Создание факультета: название={}, цвет={}", faculty.getName(), faculty.getColor());
 
         Faculty createdFaculty = facultyRepository.save(faculty);
-        logger.info("Faculty created successfully with id: {}", createdFaculty.getId());
+        logger.info("Факультет успешно создан с id: {}", createdFaculty.getId());
         return createdFaculty;
     }
 
     public Faculty getFacultyById(Long id) {
-        logger.info("Was invoked method for get faculty by id: {}", id);
+        logger.info("Был вызван метод для получения факультета по id: {}", id);
 
         Optional<Faculty> faculty = facultyRepository.findById(id);
         if (faculty.isPresent()) {
-            logger.debug("Faculty found: id={}, name={}", id, faculty.get().getName());
+            logger.debug("Факультет найден: id={}, название={}", id, faculty.get().getName());
             return faculty.get();
         } else {
-            logger.warn("Faculty not found with id: {}", id);
+            logger.warn("Факультет не найден с id: {}", id);
             return null;
         }
     }
 
     public Faculty updateFaculty(Long id, Faculty faculty) {
-        logger.info("Was invoked method for update faculty with id: {}", id);
+        logger.info("Был вызван метод для обновления факультета с id: {}", id);
 
         Optional<Faculty> existingFaculty = facultyRepository.findById(id);
         if (existingFaculty.isPresent()) {
-            logger.debug("Updating faculty: id={}, new name={}, new color={}",
+            logger.debug("Обновление факультета: id={}, новое название={}, новый цвет={}",
                     id, faculty.getName(), faculty.getColor());
 
             faculty.setId(id);
             Faculty updatedFaculty = facultyRepository.save(faculty);
-            logger.info("Faculty updated successfully: id={}", id);
+            logger.info("Факультет успешно обновлен: id={}", id);
             return updatedFaculty;
         }
 
-        logger.error("Cannot update faculty: Faculty not found with id = {}", id);
+        logger.error("Невозможно обновить факультет: Факультет не найден с id = {}", id);
         return null;
     }
 
     public void deleteFaculty(Long id) {
-        logger.info("Was invoked method for delete faculty with id: {}", id);
+        logger.info("Был вызван метод для удаления факультета с id: {}", id);
 
         if (facultyRepository.existsById(id)) {
             facultyRepository.deleteById(id);
-            logger.info("Faculty deleted successfully: id={}", id);
+            logger.info("Факультет успешно удален: id={}", id);
         } else {
-            logger.error("Cannot delete faculty: Faculty not found with id = {}", id);
+            logger.error("Невозможно удалить факультет: Факультет не найден с id = {}", id);
         }
     }
 
     public List<Faculty> getAllFaculties() {
-        logger.info("Was invoked method for get all faculties");
+        logger.info("Был вызван метод для получения всех факультетов");
 
         List<Faculty> faculties = facultyRepository.findAll();
-        logger.debug("Retrieved {} faculties", faculties.size());
+        logger.debug("Получено {} факультетов", faculties.size());
         return faculties;
     }
 
     public List<Faculty> getFacultiesByColor(String color) {
-        logger.info("Was invoked method for get faculties by color: {}", color);
+        logger.info("Был вызван метод для получения факультетов по цвету: {}", color);
         return facultyRepository.findByColor(color);
     }
 
     public List<Faculty> findFacultiesByNameOrColor(String searchTerm) {
-        logger.info("Was invoked method for find faculties by name or color: {}", searchTerm);
+        logger.info("Был вызван метод для поиска факультетов по названию или цвету: {}", searchTerm);
         return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(searchTerm, searchTerm);
     }
 
     public List<Student> getFacultyStudents(Long facultyId) {
-        logger.info("Was invoked method for get faculty students by faculty id: {}", facultyId);
+        logger.info("Был вызван метод для получения студентов факультета по id: {}", facultyId);
 
         Faculty faculty = getFacultyById(facultyId);
         if (faculty != null) {
             List<Student> students = faculty.getStudents();
-            logger.debug("Retrieved {} students for faculty {}", students.size(), facultyId);
+            logger.debug("Получено {} студентов для факультета {}", students.size(), facultyId);
             return students;
         }
 
-        logger.warn("Cannot get students: Faculty not found with id = {}", facultyId);
+        logger.warn("Невозможно получить студентов: Факультет не найден с id = {}", facultyId);
         return List.of();
     }
 }

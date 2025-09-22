@@ -18,132 +18,132 @@ public class StudentService {
     @Autowired
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        logger.info("StudentService initialized");
+        logger.info("Сервис студентов инициализирован");
     }
 
     public Student createStudent(Student student) {
-        logger.info("Was invoked method for create student");
-        logger.debug("Creating student: name={}, age={}", student.getName(), student.getAge());
+        logger.info("Был вызван метод для создания студента");
+        logger.debug("Создание студента: имя={}, возраст={}", student.getName(), student.getAge());
 
         Student createdStudent = studentRepository.save(student);
-        logger.info("Student created successfully with id: {}", createdStudent.getId());
+        logger.info("Студент успешно создан с id: {}", createdStudent.getId());
         return createdStudent;
     }
 
     public Student getStudentById(Long id) {
-        logger.info("Was invoked method for get student by id: {}", id);
+        logger.info("Был вызван метод для получения студента по id: {}", id);
 
         Optional<Student> student = studentRepository.findById(id);
         if (student.isPresent()) {
-            logger.debug("Student found: id={}, name={}", id, student.get().getName());
+            logger.debug("Студент найден: id={}, имя={}", id, student.get().getName());
             return student.get();
         } else {
-            logger.warn("Student not found with id: {}", id);
+            logger.warn("Студент не найден с id: {}", id);
             return null;
         }
     }
 
     public Optional<Student> findStudentById(Long id) {
-        logger.debug("Finding student by id: {}", id);
+        logger.debug("Поиск студента по id: {}", id);
         return studentRepository.findById(id);
     }
 
     public Student updateStudent(Long id, Student student) {
-        logger.info("Was invoked method for update student with id: {}", id);
+        logger.info("Был вызван метод для обновления студента с id: {}", id);
 
         Optional<Student> existingStudent = studentRepository.findById(id);
         if (existingStudent.isPresent()) {
-            logger.debug("Updating student: id={}, new name={}, new age={}",
+            logger.debug("Обновление студента: id={}, новое имя={}, новый возраст={}",
                     id, student.getName(), student.getAge());
 
             student.setId(id);
             Student updatedStudent = studentRepository.save(student);
-            logger.info("Student updated successfully: id={}", id);
+            logger.info("Студент успешно обновлен: id={}", id);
             return updatedStudent;
         }
 
-        logger.error("Cannot update student: Student not found with id = {}", id);
+        logger.error("Невозможно обновить студента: Студент не найден с id = {}", id);
         return null;
     }
 
     public void deleteStudent(Long id) {
-        logger.info("Was invoked method for delete student with id: {}", id);
+        logger.info("Был вызван метод для удаления студента с id: {}", id);
 
         if (studentRepository.existsById(id)) {
             studentRepository.deleteById(id);
-            logger.info("Student deleted successfully: id={}", id);
+            logger.info("Студент успешно удален: id={}", id);
         } else {
-            logger.error("Cannot delete student: Student not found with id = {}", id);
+            logger.error("Невозможно удалить студента: Студент не найден с id = {}", id);
         }
     }
 
     public List<Student> getAllStudents() {
-        logger.info("Was invoked method for get all students");
+        logger.info("Был вызван метод для получения всех студентов");
 
         List<Student> students = studentRepository.findAll();
-        logger.debug("Retrieved {} students", students.size());
+        logger.debug("Получено {} студентов", students.size());
         return students;
     }
 
     public List<Student> getStudentsByAge(int age) {
-        logger.info("Was invoked method for get students by age: {}", age);
+        logger.info("Был вызван метод для получения студентов по возрасту: {}", age);
         return studentRepository.findByAge(age);
     }
 
     public List<Student> getStudentsByAgeBetween(int minAge, int maxAge) {
-        logger.info("Was invoked method for get students by age between: {} and {}", minAge, maxAge);
+        logger.info("Был вызван метод для получения студентов по возрасту между: {} и {}", minAge, maxAge);
         return studentRepository.findByAgeBetween(minAge, maxAge);
     }
 
     public List<Student> getStudentsByNameContaining(String namePart) {
-        logger.info("Was invoked method for get students by name containing: {}", namePart);
+        logger.info("Был вызван метод для получения студентов по имени содержащему: {}", namePart);
         return studentRepository.findByNameContainingIgnoreCase(namePart);
     }
 
     public List<Student> getStudentsWithAgeLessThan(int age) {
-        logger.info("Was invoked method for get students with age less than: {}", age);
+        logger.info("Был вызван метод для получения студентов с возрастом меньше: {}", age);
         return studentRepository.findByAgeLessThan(age);
     }
 
     public List<Student> getStudentsOrderedByAge() {
-        logger.info("Was invoked method for get students ordered by age");
+        logger.info("Был вызван метод для получения студентов отсортированных по возрасту");
         return studentRepository.findAllByOrderByAgeAsc();
     }
 
     public Faculty getStudentFaculty(Long studentId) {
-        logger.info("Was invoked method for get student faculty by student id: {}", studentId);
+        logger.info("Был вызван метод для получения факультета студента по id: {}", studentId);
 
         Student student = getStudentById(studentId);
         if (student != null && student.getFaculty() != null) {
-            logger.debug("Faculty found for student {}: {}", studentId, student.getFaculty().getName());
+            logger.debug("Факультет найден для студента {}: {}", studentId, student.getFaculty().getName());
             return student.getFaculty();
         }
 
-        logger.warn("Faculty not found for student id: {}", studentId);
+        logger.warn("Факультет не найден для студента с id: {}", studentId);
         return null;
     }
 
     public Integer getTotalStudentCount() {
-        logger.info("Was invoked method for get total student count");
+        logger.info("Был вызван метод для получения общего количества студентов");
 
         Integer count = studentRepository.countAllStudents();
-        logger.debug("Total student count: {}", count);
+        logger.debug("Общее количество студентов: {}", count);
         return count;
     }
 
     public Double getAverageAge() {
-        logger.info("Was invoked method for get average student age");
+        logger.info("Был вызван метод для получения среднего возраста студентов");
 
         Double averageAge = studentRepository.findAverageAge();
-        logger.debug("Average student age: {}", averageAge);
+        logger.debug("Средний возраст студентов: {}", averageAge);
         return averageAge;
     }
 
     public List<Student> getLastFiveStudents() {
-        logger.info("Was invoked method for get last five students");
+        logger.info("Был вызван метод для получения последних пяти студентов");
 
         List<Student> students = studentRepository.findLastFiveStudents();
-        logger.debug("Retrieved {} last students", students.size());
+        logger.debug("Получено {} последних студентов", students.size());
         return students;
     }
 }
