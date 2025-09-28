@@ -103,4 +103,16 @@ public class FacultyService {
         logger.warn("Невозможно получить студентов: Факультет не найден с id = {}", facultyId);
         return List.of();
     }
+
+    public String getLongestFacultyName() {
+        logger.info("Был вызван метод для получения самого длинного названия факультета");
+
+        String longestName = facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max((name1, name2) -> Integer.compare(name1.length(), name2.length()))
+                .orElse("Факультеты не найдены");
+
+        logger.debug("Самое длинное название факультета: {}", longestName);
+        return longestName;
+    }
 }

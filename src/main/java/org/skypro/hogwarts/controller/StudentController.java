@@ -88,7 +88,6 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
-
     @GetMapping("/count")
     public Integer getStudentCount() {
         return studentService.getTotalStudentCount();
@@ -102,5 +101,15 @@ public class StudentController {
     @GetMapping("/last-five")
     public List<Student> getLastFiveStudents() {
         return studentService.getLastFiveStudents();
+    }
+
+    @GetMapping("/names-starting-with-a")
+    public List<String> getStudentNamesStartingWithA() {
+        return studentService.getStudentNamesStartingWithA();
+    }
+
+    @GetMapping("/average-age-stream")
+    public Double getAverageAgeWithStream() {
+        return studentService.getAverageAgeWithStream();
     }
 }
