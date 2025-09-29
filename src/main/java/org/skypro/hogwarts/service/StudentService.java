@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -145,5 +146,31 @@ public class StudentService {
         List<Student> students = studentRepository.findLastFiveStudents();
         logger.debug("Получено {} последних студентов", students.size());
         return students;
+    }
+
+    public List<String> getStudentNamesStartingWithA() {
+        logger.info("Был вызван метод для получения имен студентов, начинающихся на 'А'");
+
+        List<String> names = studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(name -> name.toUpperCase().startsWith("А"))
+                .map(String::toUpperCase)
+                .sorted()
+                .collect(Collectors.toList());
+
+        logger.debug("Найдено {} имен, начинающихся на 'А'", names.size());
+        return names;
+    }
+
+    public Double getAverageAgeWithStream() {
+        logger.info("Был вызван метод для получения среднего возраста студентов через Stream API");
+
+        Double averageAge = studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0.0);
+
+        logger.debug("Средний возраст студентов через Stream: {}", averageAge);
+        return averageAge;
     }
 }
