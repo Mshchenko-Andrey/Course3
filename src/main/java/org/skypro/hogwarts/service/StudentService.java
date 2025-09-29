@@ -173,4 +173,90 @@ public class StudentService {
         logger.debug("Средний возраст студентов через Stream: {}", averageAge);
         return averageAge;
     }
+
+
+    public void printStudentsParallel() {
+        logger.info("Был вызван метод для параллельной печати студентов");
+
+        List<Student> students = studentRepository.findAll();
+
+        if (students.size() < 6) {
+            logger.warn("Недостаточно студентов для параллельной печати. Требуется минимум 6, найдено: {}", students.size());
+            return;
+        }
+
+
+        System.out.println("Основной поток: " + students.get(0).getName());
+        System.out.println("Основной поток: " + students.get(1).getName());
+
+        // Первый параллельный поток - третий и четвертый студент
+        Thread thread1 = new Thread(() -> {
+            System.out.println("Параллельный поток 1: " + students.get(2).getName());
+            System.out.println("Параллельный поток 1: " + students.get(3).getName());
+        });
+
+
+        Thread thread2 = new Thread(() -> {
+            System.out.println("Параллельный поток 2: " + students.get(4).getName());
+            System.out.println("Параллельный поток 2: " + students.get(5).getName());
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            logger.error("Ошибка при ожидании завершения потоков", e);
+            Thread.currentThread().interrupt();
+        }
+
+        logger.info("Параллельная печать завершена");
+    }
+
+    public void printStudentsSynchronized() {
+        logger.info("Был вызван метод для синхронизированной печати студентов");
+
+        List<Student> students = studentRepository.findAll();
+
+        if (students.size() < 6) {
+            logger.warn("Недостаточно студентов для синхронизированной печати. Требуется минимум 6, найдено: {}", students.size());
+            return;
+        }
+
+
+        printStudentNameSynchronized("Основной поток", students.get(0).getName());
+        printStudentNameSynchronized("Основной поток", students.get(1).getName());
+
+
+        Thread thread1 = new Thread(() -> {
+            printStudentNameSynchronized("Параллельный поток 1", students.get(2).getName());
+            printStudentNameSynchronized("Параллельный поток 1", students.get(3).getName());
+        });
+
+
+        Thread thread2 = new Thread(() -> {
+            printStudentNameSynchronized("Параллельный поток 2", students.get(4).getName());
+            printStudentNameSynchronized("Параллельный поток 2", students.get(5).getName());
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            logger.error("Ошибка при ожидании завершения потоков", e);
+            Thread.currentThread().interrupt();
+        }
+
+        logger.info("Синхронизированная печать завершена");
+    }
+
+
+    private synchronized void printStudentNameSynchronized(String threadName, String studentName) {
+        System.out.println(threadName + ": " + studentName);
+    }
 }
